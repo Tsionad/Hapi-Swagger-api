@@ -1,4 +1,18 @@
+// Import dependencies
 const hapi = require('hapi');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
+const bodyParser = require('body-parser');
+
+
+// Mongoose configuration
+mongoose.Promise = global.Promise; // Allows use of native promises with mongoose
+mongoose
+  .connect(
+    process.env.DB_URI, // DB URI from .env file
+    { useNewUrlParser: true } // Resolves deprecation warning
+  )
+  .then(console.log('Connected to database.'));
 
 const server = hapi.server({
   port: 3000,
