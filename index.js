@@ -1,25 +1,22 @@
 // Import dependencies
 const hapi = require('hapi');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
-const bodyParser = require('body-parser');
 
 const Painting = require('./models/Painting');
 
-
 // Mongoose configuration
-mongoose.Promise = global.Promise; // Allows use of native promises with mongoose
-mongoose
-  .connect(
-    process.env.DB_URI, // DB URI from .env file
-    { useNewUrlParser: true }, // Resolves deprecation warning
-  )
-  .then(console.log('Connected to database.'));
+mongoose.connect('mongodb://test:testing123@ds249565.mlab.com:49565/hapi-swagger-api');
+
+mongoose.connection.once('open', () => {
+  console.log('connected to database');
+});
+
 
 const server = hapi.server({
-  port: 3000,
+  port: 4000,
   host: 'localhost',
 });
+
 
 const init = async () => {
   server.route([
@@ -52,7 +49,14 @@ const init = async () => {
   ]);
 
   await server.start();
-  console.log(`Server is running at: ${server.info.uri}`);
+  console.log(`Server running at: ${server.info.uri}`);
 };
+
+process.on('unHandledRejection', (err) => {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+});
 
 init();
