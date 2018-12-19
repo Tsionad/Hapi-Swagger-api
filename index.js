@@ -1,6 +1,7 @@
 // Import dependencies
 const hapi = require('hapi');
 const mongoose = require('mongoose');
+const { graphiqlHapi } = require('apollo-server-hapi');
 
 const Painting = require('./models/Painting');
 
@@ -19,6 +20,20 @@ const server = hapi.server({
 
 
 const init = async () => {
+
+  await server.register({
+		plugin: graphiqlHapi,
+		options: {
+			path: '/graphiql',
+			graphiqlOptions: {
+				endpointURL: '/graphql'
+			},
+			route: {
+				cors: true,
+			}
+		}
+	});
+
   server.route([
     {
       method: 'GET',
@@ -54,7 +69,7 @@ const init = async () => {
 
 process.on('unHandledRejection', (err) => {
   if (err) {
-    graphconsole.log(err);
+    console.log(err);
     process.exit(1);
   }
 });
