@@ -54,7 +54,7 @@ const init = async () => {
 
 process.on('unHandledRejection', (err) => {
   if (err) {
-    console.log(err);
+    graphconsole.log(err);
     process.exit(1);
   }
 });
