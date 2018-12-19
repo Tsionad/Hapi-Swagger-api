@@ -3,6 +3,7 @@ const hapi = require('hapi');
 const mongoose = require('mongoose');
 const { graphqlHapi, graphiqlHapi } = require('apollo-server-hapi');
 
+// Import local dependencies
 const schema = require('./graphql/schema');
 const Painting = require('./models/Painting');
 
@@ -13,7 +14,7 @@ mongoose.connection.once('open', () => {
   console.log('connected to database');
 });
 
-
+// Hapi server configuration
 const server = hapi.server({
   port: 4000,
   host: 'localhost',
@@ -22,6 +23,7 @@ const server = hapi.server({
 
 const init = async () => {
 
+  // Register routes
   await server.register({
     plugin: graphiqlHapi,
     options: {
@@ -48,7 +50,7 @@ const init = async () => {
     },
   });
 
-
+  // Default route handler
   server.route([
     {
       method: 'GET',
@@ -78,10 +80,11 @@ const init = async () => {
     },
   ]);
 
+  // Start server
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);
 };
-
+// Track unhandled rejected Promises
 process.on('unHandledRejection', (err) => {
   if (err) {
     console.log(err);
